@@ -7959,6 +7959,7 @@ MonoBehaviour:
   groundedCheckEnd: {fileID: 65035891}
   grounded: 0
   rb: {fileID: 2049542869}
+  animator: {fileID: 653578164}
 --- !u!50 &2049542869
 Rigidbody2D:
   serializedVersion: 4

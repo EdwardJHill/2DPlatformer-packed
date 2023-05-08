@@ -24,6 +24,7 @@ public class BasicCharacterController : MonoBehaviour
     public bool grounded;
 
     public Rigidbody2D rb;
+    public Animator animator;
 
     void Awake()
     {
@@ -56,6 +57,14 @@ public class BasicCharacterController : MonoBehaviour
         else if (horizInput < 0 && facingRight)
         {
             FlipSprite();
+        }
+        if ( rb.velocity.x == 0)
+        {
+            animator.SetTrigger("Idle");
+        }
+        if ( rb.velocity.x != 1)
+        {
+            animator.SetTrigger("Run");
         }
     }
     void FixedUpdate()
