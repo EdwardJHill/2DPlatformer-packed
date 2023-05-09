@@ -39,6 +39,7 @@ public class BasicCharacterController : MonoBehaviour
         {
             jumped = true;
             Debug.Log("Should jump");
+            animator.SetTrigger("Ascending");
         }
 
         if (jumped == true)
@@ -58,13 +59,22 @@ public class BasicCharacterController : MonoBehaviour
         {
             FlipSprite();
         }
-        if ( rb.velocity.x == 0)
+        if (  horizInput == 0 && grounded== true    )
         {
+            //rb.velocity.x
             animator.SetTrigger("Idle");
         }
-        if ( rb.velocity.x != 1)
+        else if ( horizInput != 0 && grounded == true)
         {
             animator.SetTrigger("Run");
+        }
+        else if ( rb.velocity.y > 0 && grounded == false)
+        {
+            animator.SetTrigger("Ascending");
+        }
+        else if (rb.velocity.y < 0 && grounded == false)
+        {
+            animator.SetTrigger("Falling");
         }
     }
     void FixedUpdate()
@@ -77,7 +87,7 @@ public class BasicCharacterController : MonoBehaviour
         
         //Move Character
         rb.velocity = new Vector2(horizInput * speed * Time.fixedDeltaTime, rb.velocity.y);
-
+        
     }
 
     // Flip Character Sprite
