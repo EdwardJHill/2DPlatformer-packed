@@ -7955,6 +7955,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 350
   jumpForce: 700
+  slideSpeed: 500
+  slideDuration: 0.3
   groundedCheckStart: {fileID: 1407805131}
   groundedCheckEnd: {fileID: 65035891}
   grounded: 0

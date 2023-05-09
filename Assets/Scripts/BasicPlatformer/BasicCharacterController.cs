@@ -16,7 +16,9 @@ public class BasicCharacterController : MonoBehaviour
 
     public float speed = 5.0f;
     public float jumpForce = 1000;
-
+    public float slideSpeed;
+    public float slideDuration;
+    bool isSliding;
     private float horizInput;
 
     public Transform groundedCheckStart;
@@ -41,8 +43,13 @@ public class BasicCharacterController : MonoBehaviour
             Debug.Log("Should jump");
             animator.SetTrigger("Ascending");
         }
+        if(Input.GetKeyDown(KeyCode.LeftShift) && isSliding == false && grounded)
+        {
+            CharacterSlide();
 
-        if (jumped == true)
+        }
+
+        if (jumped == true && !isSliding)
         {
             rb.AddForce(new Vector2(0f, jumpForce));
             Debug.Log("Jumping!");
@@ -51,28 +58,28 @@ public class BasicCharacterController : MonoBehaviour
         }
 
         // Detect if character sprite needs flipping
-        if (horizInput > 0 && !facingRight)
+        if (horizInput > 0 && !facingRight && !isSliding)
         {
             FlipSprite();
         }
-        else if (horizInput < 0 && facingRight)
+        else if (horizInput < 0 && facingRight&& !isSliding)
         {
             FlipSprite();
         }
-        if (  horizInput == 0 && grounded== true    )
+        if (  horizInput == 0 && grounded && !isSliding)
         {
             //rb.velocity.x
             animator.SetTrigger("Idle");
         }
-        else if ( horizInput != 0 && grounded == true)
+        else if ( horizInput != 0 && grounded && !isSliding)
         {
             animator.SetTrigger("Run");
         }
-        else if ( rb.velocity.y > 0 && grounded == false)
+        else if ( rb.velocity.y > 0 && !grounded && !isSliding)
         {
             animator.SetTrigger("Ascending");
         }
-        else if (rb.velocity.y < 0 && grounded == false)
+        else if (rb.velocity.y < 0 && !grounded && !isSliding )
         {
             animator.SetTrigger("Falling");
         }
@@ -95,5 +102,24 @@ public class BasicCharacterController : MonoBehaviour
     {
         facingRight = !facingRight;
         transform.Rotate(0, 180, 0);
+    }
+    void CharacterSlide()
+    {
+        isSliding = true;
+        animator.SetTrigger("Crouching");
+        if (facingRight)
+        {
+            rb.AddForce(Vector2.right*slideSpeed);
+        }
+        else
+        {
+            rb.AddForce(Vector2.left * slideSpeed);
+        }
+        StartCoroutine(CancelSlide());
+    }
+    IEnumerator CancelSlide()
+    {
+        yield return new WaitForSeconds(slideDuration);
+        isSliding = false;
     }
 }
