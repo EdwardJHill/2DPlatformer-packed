@@ -13,7 +13,7 @@ public class PlatformMovement : MonoBehaviour
     private float moveSpeed;
     private Vector2 maximumDistance;
 
-    private Rigidbody2D rb;
+    public Rigidbody2D rb;
     private Transform moveToPoint;
     // Start is called before the first frame update
     void Start()
@@ -31,5 +31,38 @@ public class PlatformMovement : MonoBehaviour
     void Update()
     {
         Vector2 distanceRemaining = moveToPoint.position - transform.position;
+        maximumDistance = distanceRemaining.normalized * moveSpeed * Time.fixedDeltaTime;
+
+        if(maximumDistance.magnitude >= distanceRemaining.magnitude|| distanceRemaining.magnitude == 0)
+        {
+            maximumDistance = distanceRemaining;
+            //swap points
+            if(moveToPoint == pointOne)
+            {
+                moveToPoint = pointTwo;
+            }
+            else
+            {
+                moveToPoint = pointOne;
+            }
+        }
+    }
+    void FixedUpdate()
+    {
+        rb.MovePosition((Vector2)transform.position + maximumDistance);
+    }
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collisionMask == (collisionMask | (1 << collision.gameObject.layer)))
+        {
+            collision.collider.transform.SetParent(transform);
+        }
+    }
+    void OnCollisionExit2D(Collision2D collision)
+    {
+        if(collisionMask == (collisionMask | (1 << collision.gameObject.layer)))
+        {
+            collision.collider.transform.SetParent(null);
+        }
     }
 }
