@@ -16,6 +16,7 @@ public class BasicCharacterController : MonoBehaviour
 
     public float speed = 5.0f;
     public float jumpForce = 1000;
+    public float bounceForce = 10000;
     public float slideSpeed;
     public float slideDuration;
     bool isSliding;
@@ -121,5 +122,14 @@ public class BasicCharacterController : MonoBehaviour
     {
         yield return new WaitForSeconds(slideDuration);
         isSliding = false;
+    }
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+
+        if (collision.gameObject.tag == "Finish")
+        {
+
+            rb.AddForce(new Vector2(0f, bounceForce));
+        }
     }
 }
